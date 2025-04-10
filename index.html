@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scissor-Paper-Rock Game</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    body {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="heading">Scissor-Paper-Rock Game</h1>
+
+  <!-- Buttons for moves -->
+  <button onclick="
+    let computerChoice = generateComputerChoice();
+    let resultMsg = getResult('SCISSORS', computerChoice);
+    showResult('SCISSORS', computerChoice, resultMsg);
+  ">
+    <img class="image" src="scissors 2.0.jpg" alt="Scissors">
+  </button>
+
+  <button onclick="
+    let computerChoice = generateComputerChoice();
+    let resultMsg = getResult('PAPER', computerChoice);
+    showResult('PAPER', computerChoice, resultMsg);
+  ">
+    <img class="image" src="paper 2.0.jpg" alt="Paper">
+  </button>
+
+  <button onclick="
+    let computerChoice = generateComputerChoice();
+    let resultMsg = getResult('ROCK', computerChoice);
+    showResult('ROCK', computerChoice, resultMsg);
+  ">
+    <img class="image" src="rock 2.0.jpg" alt="Rock">
+  </button>
+
+  <!-- Reset score button -->
+  <br>
+  <button class="reset-btn" onclick="resetScore()">Reset Score</button>
+
+  <!-- JavaScript logic -->
+  <script>
+    let scoreStr = localStorage.getItem('Score');
+    let score = scoreStr ? JSON.parse(scoreStr) : { win: 0, lost: 0, tie: 0 };
+
+    function resetScore() {
+      score = { win: 0, lost: 0, tie: 0 };
+      localStorage.setItem('Score', JSON.stringify(score));
+      alert('Score has been reset!');
+    }
+
+    score.displayScore = function () {
+      return `No of Matches Won: ${score.win}, No of Matches Lost: ${score.lost}, No of Tie: ${score.tie}`;
+    };
+
+    function generateComputerChoice() {
+      let randomNumber = Math.random();
+      if (randomNumber < 1 / 3) {
+        return 'SCISSORS';
+      } else if (randomNumber < 2 / 3) {
+        return 'PAPER';
+      } else {
+        return 'ROCK';
+      }
+    }
+
+    function getResult(userMove, computerMove) {
+      if (userMove === computerMove) {
+        score.tie++;
+        return "It's a Tie!";
+      }
+
+      const winConditions = {
+        SCISSORS: 'PAPER',
+        PAPER: 'ROCK',
+        ROCK: 'SCISSORS'
+      };
+
+      if (winConditions[userMove] === computerMove) {
+        score.win++;
+        return "You Won!";
+      } else {
+        score.lost++;
+        return "You Lost!";
+      }
+    }
+
+    function showResult(userMove, computerMove, resultMsg) {
+      localStorage.setItem('Score', JSON.stringify(score));
+      alert(`You chose: ${userMove}.
+Computer chose: ${computerMove}.
+${resultMsg}.
+Won: ${score.win}, Lost: ${score.lost}, Tie: ${score.tie}`);
+    }
+  </script>
+
+</body>
+</html>
